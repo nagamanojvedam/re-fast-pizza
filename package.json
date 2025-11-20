@@ -6,7 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "prisma:seed": "prisma db seed",
+    "prisma:reset": "prisma migrate reset"
+  },
+  "prismaScripts": {
+    "prisma:generate": "Generate Prisma Client after schema changes",
+    "prisma:migrate": "Create and apply new database migrations",
+    "prisma:studio": "Open Prisma Studio visual database browser",
+    "prisma:seed": "Seed database with initial data from prisma/seed.ts",
+    "prisma:reset": "Reset database, re-run all migrations and seed"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
