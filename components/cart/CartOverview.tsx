@@ -7,7 +7,13 @@ import Link from "next/link";
 import { useState } from "react";
 
 function CartOverview() {
-  const { cart, clearCart, getTotalPizzaQuantity, getTotalPizzaCost, removeItem } = useCart();
+  const {
+    cart,
+    clearCart,
+    getTotalPizzaQuantity,
+    getTotalPizzaCost,
+    removeItem,
+  } = useCart();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const quantity = getTotalPizzaQuantity();
@@ -16,22 +22,21 @@ function CartOverview() {
   if (quantity === 0) return null;
 
   return (
-    <div className="fixed bottom-20 right-6 z-50 flex flex-col items-end gap-2">
+    <div className="fixed bottom-16 right-12 z-50 flex flex-col items-end gap-2">
       {/* Expanded Cart Items List */}
       {isExpanded && (
-        <div className="bg-white rounded-lg shadow-2xl border-2 border-yellow-600 w-80 max-h-96 overflow-hidden animate-in slide-in-from-bottom-4 duration-200">
+        <div className="animate-in slide-in-from-bottom-4 max-h-96 w-80 overflow-hidden rounded-lg border-2 border-yellow-400 bg-white shadow-2xl duration-200">
           {/* Header */}
-          <div className="bg-yellow-600 p-3 flex items-center justify-between">
-            <h3 className="font-semibold text-stone-900 text-sm flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-yellow-400 p-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-stone-900">
               <ShoppingCart className="h-4 w-4" />
-              Cart Items ({quantity})
+              Cart Items ({cart.length})
             </h3>
             <button
-              onClick={() => setIsExpanded(false)}
-              className="text-stone-900 hover:text-stone-700 transition-colors"
-              aria-label="Collapse cart"
+              onClick={clearCart}
+              className="flex items-center gap-1 text-xs text-red-600 transition-colors hover:text-red-700"
             >
-              <ChevronDown className="h-5 w-5" />
+              <Trash2 className="h-3 w-3" />
             </button>
           </div>
 
@@ -40,20 +45,21 @@ function CartOverview() {
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="p-3 border-b border-stone-200 hover:bg-stone-50 transition-colors"
+                className="border-b border-stone-200 p-3 transition-colors hover:bg-stone-50"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-stone-800 truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-stone-800">
                       {item.name}
                     </p>
-                    <p className="text-xs text-stone-600 mt-1">
-                      {item.quantity} × {formatCurrency(item.unitPrice)} = {formatCurrency(item.totalPrice)}
+                    <p className="mt-1 text-xs text-stone-600">
+                      {item.quantity} × {formatCurrency(item.unitPrice)} ={" "}
+                      {formatCurrency(item.totalPrice)}
                     </p>
                   </div>
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-red-600 hover:text-red-700 transition-colors flex-shrink-0"
+                    className="flex-shrink-0 text-red-600 transition-colors hover:text-red-700"
                     aria-label={`Remove ${item.name}`}
                   >
                     <X className="h-4 w-4" />
@@ -64,19 +70,15 @@ function CartOverview() {
           </div>
 
           {/* Footer Actions */}
-          <div className="p-3 bg-stone-50 border-t border-stone-200 flex items-center justify-between gap-2">
-            <button
-              onClick={clearCart}
-              className="text-xs text-red-600 hover:text-red-700 transition-colors flex items-center gap-1"
-            >
-              <Trash2 className="h-3 w-3" />
-              Clear All
-            </button>
+          <div className="flex items-center justify-between gap-2 border-t border-stone-200 bg-stone-50 p-3">
+            <span className="font-semibold">
+              Total: {formatCurrency(amount)}
+            </span>
             <Link
               href="/cart"
-              className="bg-yellow-600 text-stone-900 px-4 py-1.5 rounded-md text-xs font-semibold hover:bg-yellow-700 transition-colors"
+              className="rounded-md bg-yellow-400 px-4 py-1.5 text-xs font-semibold text-stone-900 transition-colors hover:bg-yellow-400"
             >
-              View Cart →
+              Checkout →
             </Link>
           </div>
         </div>
@@ -85,24 +87,12 @@ function CartOverview() {
       {/* Snackbar Button */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="bg-yellow-600 text-stone-900 px-4 py-3 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex items-center gap-3 border-2 border-yellow-700 group"
+        className="relative flex items-center gap-3 rounded-full bg-yellow-400 px-4 py-3 text-stone-900 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl"
         aria-label={isExpanded ? "Collapse cart" : "Expand cart"}
       >
-        <ShoppingCart className="h-5 w-5" />
-        <div className="flex items-center gap-3">
-          <div className="text-left">
-            <p className="text-xs font-medium leading-none">
-              {quantity} {quantity === 1 ? "item" : "items"}
-            </p>
-            <p className="text-sm font-bold leading-none mt-1">
-              {formatCurrency(amount)}
-            </p>
-          </div>
-          {isExpanded ? (
-            <ChevronDown className="h-4 w-4 group-hover:translate-y-0.5 transition-transform" />
-          ) : (
-            <ChevronUp className="h-4 w-4 group-hover:-translate-y-0.5 transition-transform" />
-          )}
+        <ShoppingCart className="h-6 w-6" />
+        <div className="absolute right-[-5px] top-[-5px] flex items-center rounded-full bg-red-600 px-1.5 text-sm font-semibold text-white">
+          {quantity}
         </div>
       </button>
     </div>
