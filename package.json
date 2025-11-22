@@ -45,5 +45,6 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
-  }
+  },
+  "postinstall": "prisma generate"
 }
